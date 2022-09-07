@@ -2,6 +2,7 @@ package com.in28minutes.springboot.firstrestapi.survey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -37,13 +38,38 @@ public class SurveyService {
 	}
 
 	public Survey retrieveSurveyById(String surveyId) {
-		Predicate<? super Survey> predicate = survey -> survey.getId().equals(surveyId);
+		Predicate<? super Survey> predicate = survey -> survey.getId().equalsIgnoreCase(surveyId);
 		Optional<Survey> optionalSurvey = surveys.stream().filter(predicate).findFirst();
 		if (optionalSurvey.isEmpty()) {
 			return null;
 		}
 
 		return optionalSurvey.get();
+	}
+
+	public List<Question> retrieveAllSurveyQuestions(String surveyId) {
+		Survey survey = retrieveSurveyById(surveyId);
+		if (survey == null) {
+			return Collections.emptyList();
+		}
+
+		return survey.getQuestions();
+	}
+
+	public Question retrieveSpecificSurveyQuestions(String surveyId, String questionId) {
+		List<Question> questions = retrieveAllSurveyQuestions(surveyId);
+		if (questions == null || questions.isEmpty()) {
+			return null;
+		}
+
+		Optional<Question> optionalQuestion =
+				questions.stream().filter(question -> question.getId().equalsIgnoreCase(questionId)).findFirst();
+
+		if (optionalQuestion.isEmpty()) {
+			return null;
+		}
+
+		return optionalQuestion.get();
 	}
 
 }
