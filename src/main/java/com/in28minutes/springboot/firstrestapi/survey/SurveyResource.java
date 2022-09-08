@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,6 +75,15 @@ public class SurveyResource {
 	@DeleteMapping("/surveys/{surveyId}/questions/{questionId}")
 	public ResponseEntity<Object> deleteSurveyQuestions(@PathVariable String surveyId, @PathVariable String questionId) {
 		surveyService.deleteSurveyQuestions(surveyId, questionId);
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("/surveys/{surveyId}/questions/{questionId}")
+	public ResponseEntity<Object> updateSurveyQuestions(@PathVariable String surveyId, @PathVariable String questionId,
+			@RequestBody Question question) {
+
+		surveyService.updateSurveyQuestions(surveyId, questionId, question);
 
 		return ResponseEntity.noContent().build();
 	}
