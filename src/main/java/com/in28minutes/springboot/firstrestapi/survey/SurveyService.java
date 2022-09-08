@@ -1,5 +1,7 @@
 package com.in28minutes.springboot.firstrestapi.survey;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -72,9 +74,17 @@ public class SurveyService {
 		return optionalQuestion.get();
 	}
 
-	public void addNewSurveyQuetion(String surveyId, Question question) {
+	public String addNewSurveyQuetion(String surveyId, Question question) {
 		List<Question> questions = retrieveAllSurveyQuestions(surveyId);
+		question.setId(generateRandomId());
 		questions.add(question);
+
+		return question.getId();
+	}
+
+	private String generateRandomId() {
+		SecureRandom secureRandom = new SecureRandom();
+		return new BigInteger(32, secureRandom).toString();
 	}
 
 }
