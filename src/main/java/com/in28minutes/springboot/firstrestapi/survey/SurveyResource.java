@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,6 +69,13 @@ public class SurveyResource {
 				.toUri();
 
 		return ResponseEntity.created(location).build();
+	}
+
+	@DeleteMapping("/surveys/{surveyId}/questions/{questionId}")
+	public ResponseEntity<Object> deleteSurveyQuestions(@PathVariable String surveyId, @PathVariable String questionId) {
+		surveyService.deleteSurveyQuestions(surveyId, questionId);
+
+		return ResponseEntity.noContent().build();
 	}
 
 }
