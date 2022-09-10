@@ -121,6 +121,13 @@ class SurveyResourceIT {
 		// 201
 		// Location: "/surveys/Survey1/questions/"
 		assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
-		assertTrue(responseEntity.getHeaders().get("Location").get(0).contains("/surveys/Survey1/questions/"));
+
+		String locationHeader = responseEntity.getHeaders().get("Location").get(0);
+		assertTrue(locationHeader.contains("/surveys/Survey1/questions/"));
+
+		// DELETE
+		// locationHeader
+
+		template.delete(locationHeader);
 	}
 }
