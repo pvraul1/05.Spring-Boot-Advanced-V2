@@ -1,6 +1,8 @@
 package com.in28minutes.springboot.firstrestapi.survey;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -32,12 +34,23 @@ class SurveyResourceIT {
 	TestRestTemplate template;
 
 	// {"id":"Question1","description":"Most Popular Cloud Platform Today","options":["AWS","Azure","Google Cloud","Oracle Cloud"],"correctAnswer":"AWS"}
-	// [Content-Type:"application/json"
-	
+	// [Content-Type:"application/json",
+
 	@Test
-	void retrieveSpecificSurveyQuestions_basicScenario() {
+	void retrieveSpecificSurveyQuestions_basicScenario() throws JSONException {
 		ResponseEntity<String> responseEntity = template.getForEntity(SPECIFIC_QUESTION_URL, String.class);
-		System.out.println(responseEntity.getBody());
-		System.out.println(responseEntity.getHeaders());
+
+		String expectedResponse = 
+			"""
+				{
+					"id":"Question1",
+					"description":"Most Popular Cloud Platform Today",
+					"correctAnswer":"AWS"
+				}
+			""";
+
+		JSONAssert.assertEquals(str, responseEntity.getBody(), true);
+		JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false); // no tiene options
 	}
+
 }
