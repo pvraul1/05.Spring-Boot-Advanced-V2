@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -87,4 +90,37 @@ class SurveyResourceIT {
 		JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false);
 	}
 
+	@Test
+	void addNewSurveyQuestion_basicScenario() {
+
+		String requestBody = """
+
+			{
+				"id":"Question1",
+				"description":"Your Favorite Language",
+				"options":["Java","Python","JavaScript","Haskell"],
+				"correctAnswer":"Java"
+			}
+
+				""";
+
+		// http://localhost:8080/surveys/Survey1/questions
+		// POST
+		// Content-Type: "application/json"
+		// 201
+		// Location: http://localhost:8080/surveys/Survey1/questions/1778741044
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json");
+		
+		HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
+		ResponseEntity<String> responseEntity = template.exchange(GENERIC_QUESTION_URL, HttpMethod.POST, httpEntity, String.class);
+
+		// [Location:"http://localhost:58500/surveys/Survey1/questions/2781864973", Content-Length:"0", Date:"Sat, 10 Sep 2022 16:53:31 GMT", Keep-Alive:"timeout=60", Connection:"keep-alive"]
+		// Asserts
+		// 201
+		// Location: "/surveys/Survey1/questions/"
+		assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+		assertTrue(responseEntity.getHeaders().get("Location").get(0).contains("/surveys/Survey1/questions/"));
+	}
 }
