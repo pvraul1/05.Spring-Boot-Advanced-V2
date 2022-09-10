@@ -1,5 +1,8 @@
 package com.in28minutes.springboot.firstrestapi.survey;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -11,6 +14,11 @@ import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class SurveyResourceIT {
+
+	private static final String SPECIFIC_QUESTION_URL = "/surveys/Survey1/questions/Question1";
+
+	@Autowired
+	TestRestTemplate template;
 
 	String str = """
 
@@ -28,11 +36,6 @@ class SurveyResourceIT {
 
 			""";
 
-	private static final String SPECIFIC_QUESTION_URL = "/surveys/Survey1/questions/Question1";
-
-	@Autowired
-	TestRestTemplate template;
-
 	// {"id":"Question1","description":"Most Popular Cloud Platform Today","options":["AWS","Azure","Google Cloud","Oracle Cloud"],"correctAnswer":"AWS"}
 	// [Content-Type:"application/json",
 
@@ -49,8 +52,12 @@ class SurveyResourceIT {
 				}
 			""";
 
+		assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+		assertEquals("application/json", responseEntity.getHeaders().get("Content-Type").get(0));
+
 		JSONAssert.assertEquals(str, responseEntity.getBody(), true);
-		JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false); // no tiene options
+		JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false); // It have not options
+
 	}
 
 }
