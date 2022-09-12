@@ -112,7 +112,7 @@ class SurveyResourceIT {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json");
-		
+
 		HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
 		ResponseEntity<String> responseEntity = template.exchange(GENERIC_QUESTION_URL, HttpMethod.POST, httpEntity, String.class);
 
