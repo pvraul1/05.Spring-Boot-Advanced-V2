@@ -37,14 +37,13 @@ public class SpringSecurityConfiguration {
     private UserDetails createNewUser(String username, String password) {
         Function<String, String> passwordEncoder = input -> passwordEncoder().encode(input);
 
-        UserDetails userDetails = User.builder()
+        return User.builder()
                 .passwordEncoder(passwordEncoder)
                 .username(username)
                 .password(password)
                 .roles("USER", "ADMIN")
                 .build();
 
-        return userDetails;
     }
 
     @Bean
